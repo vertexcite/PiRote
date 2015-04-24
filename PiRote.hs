@@ -12,7 +12,6 @@ compareForPi t = zipWith (\x y -> if x == y then x else 'X') t remString
 main = mainWidget $ el "div" $ do
   t <- textInput
   text preString
-  --  theText = fmap show $ _testInput_value t
   compareResultDyn <- mapDyn (groupString . compareForPi) (_textInput_value t)
   dynText compareResultDyn
 
