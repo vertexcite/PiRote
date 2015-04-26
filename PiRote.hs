@@ -10,19 +10,18 @@ import Reflex.Dom
 import qualified Data.Map as Map
 import Safe (readMay)
 
-compareForPi :: String -> String
-compareForPi t = zipWith (\x y -> if x == y then x else 'X') t remString
+import Data.Maybe (fromMaybe)
+
+compareForPi :: Int -> String -> String
+compareForPi headstart t = zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
 
 main = mainWidget $ el "div" $ do
-  headstartDyn <- numberInput
+  headstartInputDyn <- numberInput
+  headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
   t <- textInput
-  preStringDyn <- mapDyn (\headstart ->
-                            case headstart of
-                              Nothing -> ""
-                              Just x -> groupString $ take x piString) headstartDyn
-
+  preStringDyn <- mapDyn (\headstart -> groupString $ take headstart piString) headstartDyn
   dynText preStringDyn
-  compareResultDyn <- mapDyn (groupString . compareForPi) (_textInput_value t)
+  compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
   inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
   dynText compareResultDyn
   text " ------ inputted:"
