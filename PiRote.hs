@@ -16,14 +16,15 @@ compareForPi :: Int -> String -> String
 compareForPi headstart t = take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
 
 main = mainWidget $ el "div" $ do
-  headstartInputDyn <- numberInput
-  headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
-  t <- textInput
-  compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
-  inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
+  rec inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
+      text " ------ inputted:"
+      dynText inputLengthDyn
+
+      headstartInputDyn <- numberInput
+      headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
+      t <- textInput
+      compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
   dynText compareResultDyn
-  text " ------ inputted:"
-  dynText inputLengthDyn
 
 numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
