@@ -19,7 +19,7 @@ main = mainWidget $ el "div" $ do
   preStringDyn <- mapDyn (\headstart ->
                             case headstart of
                               Nothing -> ""
-                              Just x -> take x piString) headstartDyn
+                              Just x -> groupString $ take x piString) headstartDyn
 
   dynText preStringDyn
   compareResultDyn <- mapDyn (groupString . compareForPi) (_textInput_value t)
@@ -51,7 +51,10 @@ groupSize = 5
 offset = 2
 
 groupString :: String -> String
-groupString [] = []
-groupString xs =
+groupString xs = take offset xs ++ " " ++ groupString' (drop offset xs)
+
+groupString' :: String -> String
+groupString' [] = []
+groupString' xs =
   let (next, rest) = splitAt groupSize xs 
-  in next ++ " " ++ groupString rest
+  in next ++ " " ++ groupString' rest
