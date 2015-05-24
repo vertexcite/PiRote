@@ -32,10 +32,29 @@ main =
           elAttr "div" ("class" =: "main") $ el "ul" $ do
             el "li" $ text "Pi digits (a glimpse of the tail, X's for incorrect digits): "
             el "li" $ dynText compareResultDyn
-          inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
-          text "Stats: digits entered so far:"
-          dynText inputLengthDyn
-
+          inputLengthDyn <- mapDyn length (_textInput_value t)
+          inputLengthTextualDyn <- mapDyn show inputLengthDyn
+          countCorrectDyn <- combineDyn countCorrect headstartDyn (_textInput_value t)
+          countCorrectTextualDyn <- mapDyn show countCorrectDyn
+          countErrorsDyn <- combineDyn (-) inputLengthDyn countCorrectDyn
+          countErrorsTextualDyn <- mapDyn show countErrorsDyn
+          countTotalDyn <- combineDyn (+) headstartDyn inputLengthDyn
+          countTotalTextualDyn <- mapDyn show countTotalDyn
+          text "Stats:"
+          el "div" $ el "ul" $ do
+            el "li" $ do
+              text "Digits entered so far: "
+              dynText inputLengthTextualDyn
+            el "li" $ do
+              text "Correct: "
+              dynText countCorrectTextualDyn
+            el "li" $ do
+              text "Errors: "
+              dynText countErrorsTextualDyn
+            el "li" $ do
+              text "Total: "
+              dynText countTotalTextualDyn
+          
 numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
   let errorState = Map.singleton "style" "border-color: red"
@@ -68,7 +87,9 @@ displayLength :: Int
 displayLength = 30
 
 compareForPi :: Int -> String -> String
-compareForPi headstart t = drop (length full - displayLength) full
+compareForPi headstart input = drop (length full - displayLength) full
   where
-    full = groupString $ take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
+    full = groupString $ take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') input (drop headstart piString)
 
+countCorrect :: Int -> String -> Int
+countCorrect headstart input = length $ filter id $ zipWith (==) input (drop headstart piString)
