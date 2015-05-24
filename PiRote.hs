@@ -21,7 +21,7 @@ displayLength = 30
 compareForPi :: Int -> String -> String
 compareForPi headstart t = drop (length full - displayLength) full
   where
-    full = take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
+    full = groupString $ take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
 
 main =
   mainWidgetWithCss $(embedFile "style.css") $
@@ -41,7 +41,7 @@ main =
           t <- el "div" $ el "ul" $ do
             el "li" $ text "Enter memorised digits here: "
             el "li" textInput
-          compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
+          compareResultDyn <- combineDyn (\headstart input -> compareForPi headstart input) headstartDyn (_textInput_value t)
         elAttr "div" ("class" =: "main") $ el "ul" $ do
             el "li" $ text "Pi digits (X's for incorrect digits): "
             el "li" $ dynText compareResultDyn
