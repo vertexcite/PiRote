@@ -40,7 +40,9 @@ main =
           
           t <- el "div" $ do
             text "Enter memorised digits here: "
-            textInput
+            -- textInput
+            let attrs = constDyn $ Map.fromList [("step", "any")]
+            input' "number" "" never attrs
           compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
         elAttr "div" ("class" =: "main") $ do
             text "Pi digits (X's for incorrect digits): "
