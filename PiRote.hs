@@ -15,14 +15,6 @@ import Safe (readMay)
 
 import Data.Maybe (fromMaybe)
 
-displayLength :: Int
-displayLength = 30
-
-compareForPi :: Int -> String -> String
-compareForPi headstart t = drop (length full - displayLength) full
-  where
-    full = groupString $ take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
-
 main =
   mainWidgetWithCss $(embedFile "style.css") $
     elAttr "div" ("class" =: "todomvc-wrapper" <> "visibility" =: "hidden") $ 
@@ -71,3 +63,12 @@ groupString' [] = []
 groupString' xs =
   let (next, rest) = splitAt groupSize xs 
   in next ++ " " ++ groupString' rest
+
+displayLength :: Int
+displayLength = 30
+
+compareForPi :: Int -> String -> String
+compareForPi headstart t = drop (length full - displayLength) full
+  where
+    full = groupString $ take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
+
