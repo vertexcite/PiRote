@@ -41,7 +41,7 @@ main =
           t <- el "div" $ el "ul" $ do
             el "li" $ text "Enter memorised digits here: "
             el "li" textInput
-          compareResultDyn <- combineDyn (\headstart input -> compareForPi headstart input) headstartDyn (_textInput_value t)
+          compareResultDyn <- combineDyn compareForPi headstartDyn (_textInput_value t)
         elAttr "div" ("class" =: "main") $ el "ul" $ do
             el "li" $ text "Pi digits (X's for incorrect digits): "
             el "li" $ dynText compareResultDyn
