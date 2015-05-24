@@ -31,14 +31,20 @@ main =
         rec
           inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
           elAttr "div" ("class" =: "view") $ do 
-            text "Inputted:"
+            text "Stats: digits entered so far:"
             dynText inputLengthDyn
 
+          text "How many digits headstart:"
           headstartInputDyn <- el "div" numberInput
           headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
-          t <- el "div" textInput
-        compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
-        elAttr "div" ("class" =: "main") $ dynText compareResultDyn
+          
+          t <- el "div" $ do
+            text "Enter memorised digits here: "
+            textInput
+          compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
+        elAttr "div" ("class" =: "main") $ do
+            text "Pi digits (X's for incorrect digits): "
+            dynText compareResultDyn
 
 numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
