@@ -2,6 +2,7 @@
 module Main where
 
 import Data.FileEmbed
+import Data.Monoid ((<>))
 
 import Control.Monad
 import Data.Char
@@ -17,17 +18,22 @@ import Data.Maybe (fromMaybe)
 compareForPi :: Int -> String -> String
 compareForPi headstart t = take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
 
-main = mainWidgetWithCss $(embedFile "style.css") $ el "div" $ do
-  rec inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
-      elAttr "div" ("class" =: "view") $ do
-        text "Inputted:"
-        dynText inputLengthDyn
+main =
+  mainWidgetWithCss $(embedFile "style.css") $
+    elAttr "div" ("class" =: "todomvc-wrapper" <> "visibility" =: "hidden") $ 
+      elAttr "section" ("class" =: "todoapp") $ do
+        el "h1" $ text "Pi Rote"      
+        rec
+          inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
+          elAttr "div" ("class" =: "view") $ do 
+            text "Inputted:"
+            dynText inputLengthDyn
 
-      headstartInputDyn <- el "div" numberInput
-      headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
-      t <- el "div" textInput
-      compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
-  el "div" $ dynText compareResultDyn
+          headstartInputDyn <- el "div" numberInput
+          headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
+          t <- el "div" textInput
+        compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
+        elAttr "div" ("class" =: "main") $ dynText compareResultDyn
 
 numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
