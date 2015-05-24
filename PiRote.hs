@@ -28,12 +28,7 @@ main =
     elAttr "div" ("class" =: "todomvc-wrapper" <> "visibility" =: "hidden") $ 
       elAttr "section" ("class" =: "todoapp") $ do
         el "h1" $ text "Pi Rote"      
-        rec
-          inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
-          elAttr "div" ("class" =: "view") $ do 
-            text "Stats: digits entered so far:"
-            dynText inputLengthDyn
-
+        elAttr "div" ("class" =: "view") $ do 
           text "How many digits headstart:"
           headstartInputDyn <- el "div" numberInput
           headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
@@ -42,9 +37,12 @@ main =
             el "li" $ text "Enter memorised digits here: "
             el "li" textInput
           compareResultDyn <- combineDyn compareForPi headstartDyn (_textInput_value t)
-        elAttr "div" ("class" =: "main") $ el "ul" $ do
-            el "li" $ text "Pi digits (X's for incorrect digits): "
+          elAttr "div" ("class" =: "main") $ el "ul" $ do
+            el "li" $ text "Pi digits (a glimpse of the tail, X's for incorrect digits): "
             el "li" $ dynText compareResultDyn
+          inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
+          text "Stats: digits entered so far:"
+          dynText inputLengthDyn
 
 numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
