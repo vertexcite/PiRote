@@ -15,8 +15,13 @@ import Safe (readMay)
 
 import Data.Maybe (fromMaybe)
 
+displayLength :: Int
+displayLength = 30
+
 compareForPi :: Int -> String -> String
-compareForPi headstart t = take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
+compareForPi headstart t = drop (length full - displayLength) full
+  where
+    full = take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
 
 main =
   mainWidgetWithCss $(embedFile "style.css") $
