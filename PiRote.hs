@@ -19,7 +19,7 @@ compareForPi headstart t = take headstart piString ++ zipWith (\x y -> if x == y
 
 main = mainWidgetWithCss $(embedFile "style.css") $ el "div" $ do
   rec inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
-      el "div" $ do
+      elAttr "div" ("class" =: "view") $ do
         text "Inputted:"
         dynText inputLengthDyn
 
