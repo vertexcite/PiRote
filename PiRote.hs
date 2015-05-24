@@ -38,13 +38,13 @@ main =
           headstartInputDyn <- el "div" numberInput
           headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
           
-          t <- el "div" $ do
-            text "Enter memorised digits here: "
-            textInput
+          t <- el "div" $ el "ul" $ do
+            el "li" $ text "Enter memorised digits here: "
+            el "li" textInput
           compareResultDyn <- combineDyn (\headstart input -> groupString $ compareForPi headstart input) headstartDyn (_textInput_value t)
-        elAttr "div" ("class" =: "main") $ do
-            text "Pi digits (X's for incorrect digits): "
-            dynText compareResultDyn
+        elAttr "div" ("class" =: "main") $ el "ul" $ do
+            el "li" $ text "Pi digits (X's for incorrect digits): "
+            el "li" $ dynText compareResultDyn
 
 numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
