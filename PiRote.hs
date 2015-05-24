@@ -36,8 +36,10 @@ main =
           inputLengthTextualDyn <- mapDyn show inputLengthDyn
           countCorrectDyn <- combineDyn countCorrect headstartDyn (_textInput_value t)
           countCorrectTextualDyn <- mapDyn show countCorrectDyn
-          countErrorsDyn <- combineDyn (-) inputLengthDyn countCorrectDyn
-          countErrorsTextualDyn <- mapDyn show countErrorsDyn
+          countErrorsCurrentDyn <- combineDyn (-) inputLengthDyn countCorrectDyn
+          countErrorsCurrentTextualDyn <- mapDyn show countErrorsCurrentDyn
+          countErrorsCumulativeDyn <- foldDyn (+) 0 (updated countErrorsCurrentDyn)
+          countErrorsCumulativeTextualDyn <- mapDyn show countErrorsCumulativeDyn
           countTotalDyn <- combineDyn (+) headstartDyn inputLengthDyn
           countTotalTextualDyn <- mapDyn show countTotalDyn
           text "Stats:"
@@ -49,8 +51,11 @@ main =
               text "Correct: "
               dynText countCorrectTextualDyn
             el "li" $ do
-              text "Errors: "
-              dynText countErrorsTextualDyn
+              text "Errors (current): "
+              dynText countErrorsCurrentTextualDyn
+            el "li" $ do
+              text "Errors (cumulative): "
+              dynText countErrorsCumulativeTextualDyn
             el "li" $ do
               text "Total: "
               dynText countTotalTextualDyn
