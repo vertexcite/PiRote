@@ -1,5 +1,7 @@
-{-# LANGUAGE RecursiveDo #-}
+{-# LANGUAGE RecursiveDo, ScopedTypeVariables, FlexibleContexts, TypeFamilies, ConstraintKinds, TemplateHaskell #-}
 module Main where
+
+import Data.FileEmbed
 
 import Control.Monad
 import Data.Char
@@ -15,7 +17,7 @@ import Data.Maybe (fromMaybe)
 compareForPi :: Int -> String -> String
 compareForPi headstart t = take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') t (drop headstart piString)
 
-main = mainWidget $ el "div" $ do
+main = mainWidgetWithCss $(embedFile "style.css") $ el "div" $ do
   rec inputLengthDyn <- mapDyn (show . length) (_textInput_value t)
       el "div" $ do
         text "Inputted:"
