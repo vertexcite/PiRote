@@ -38,8 +38,8 @@ main =
           countCorrectTextualDyn <- mapDyn show countCorrectDyn
           countErrorsCurrentDyn <- combineDyn (-) inputLengthDyn countCorrectDyn
           countErrorsCurrentTextualDyn <- mapDyn show countErrorsCurrentDyn
-          countErrorsCumulativeDyn <- foldDyn (+) 0 (updated countErrorsCurrentDyn)
-          countErrorsCumulativeTextualDyn <- mapDyn show countErrorsCumulativeDyn
+          countErrorsCumulativeDyn <- foldDyn incrementIfNewError (0,0) (updated countErrorsCurrentDyn)
+          countErrorsCumulativeTextualDyn <- mapDyn (show . snd) countErrorsCumulativeDyn
           countTotalDyn <- combineDyn (+) headstartDyn inputLengthDyn
           countTotalTextualDyn <- mapDyn show countTotalDyn
           text "Stats:"
@@ -98,3 +98,7 @@ compareForPi headstart input = drop (length full - displayLength) full
 
 countCorrect :: Int -> String -> Int
 countCorrect headstart input = length $ filter id $ zipWith (==) input (drop headstart piString)
+
+incrementIfNewError currentErrorCount (previousErrorCount, previousTotal) =
+  if currentErrorCount > previousErrorCount then (currentErrorCount, previousTotal + currentErrorCount - previousErrorCount) 
+  else (currentErrorCount, previousTotal)
