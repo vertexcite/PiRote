@@ -24,17 +24,18 @@ main =
           text "How many digits headstart:"
           headstartInputDyn <- el "div" numberInput
           headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
-          
+
           t <- el "div" $ el "ul" $ do
-            el "li" $ text "Enter memorised digits here: "
-            el "li" textInput
-          compareResultDyn <- combineDyn compareForPi headstartDyn (_textInput_value t)
+            el "li" $ text "Enter memorised digits here (but look lower for assessment): "
+            el "li" $ piInput headstartDyn
+
+          compareResultDyn <- combineDyn compareForPi headstartDyn t
           elAttr "div" ("class" =: "main") $ el "ul" $ do
             el "li" $ text "Pi digits (a glimpse of the tail, X's for incorrect digits): "
             el "li" $ dynText compareResultDyn
-          inputLengthDyn <- mapDyn length (_textInput_value t)
+          inputLengthDyn <- mapDyn length t
           inputLengthTextualDyn <- mapDyn show inputLengthDyn
-          countCorrectDyn <- combineDyn countCorrect headstartDyn (_textInput_value t)
+          countCorrectDyn <- combineDyn countCorrect headstartDyn t
           countCorrectTextualDyn <- mapDyn show countCorrectDyn
           countErrorsCurrentDyn <- combineDyn (-) inputLengthDyn countCorrectDyn
           countErrorsCurrentTextualDyn <- mapDyn show countErrorsCurrentDyn
@@ -69,6 +70,18 @@ numberInput = do
       attrs <- mapDyn (\r -> case r of
                                   Just _ -> validState
                                   Nothing -> errorState) result
+  return result
+
+piInput :: (MonadWidget t m) => Dynamic t Int -> m (Dynamic t String)
+piInput headstartDyn = do
+  let errorState = Map.singleton "style" "border-color: red"
+      validState = Map.singleton "style" "border-color: green"
+  rec n <- input' "text" "" never attrs
+      countCorrectDyn <- combineDyn countCorrect headstartDyn (_textInput_value n)
+      inputLengthDyn <- mapDyn length (_textInput_value n)
+      countErrorsCurrentDyn <- combineDyn (-) inputLengthDyn countCorrectDyn
+      result <- mapDyn id $ _textInput_value n
+      attrs <- mapDyn (\r -> if r == 0 then validState else errorState) countErrorsCurrentDyn
   return result
 
 
