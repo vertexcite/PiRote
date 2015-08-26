@@ -65,7 +65,9 @@ numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
   let errorState = Map.singleton "style" "border-color: red"
       validState = Map.singleton "style" "border-color: green"
-  rec n <- input' "number" "0" never attrs
+  rec n <- textInput $ def & textInputConfig_inputType .~ "number"
+                       & textInputConfig_initialValue .~ "0"
+                       & textInputConfig_attributes .~ attrs
       result <- mapDyn readMay $ _textInput_value n
       attrs <- mapDyn (\r -> case r of
                                   Just _ -> validState
@@ -76,7 +78,7 @@ piInput :: (MonadWidget t m) => Dynamic t Int -> m (Dynamic t String)
 piInput headstartDyn = do
   let errorState = Map.singleton "style" "border-color: red"
       validState = Map.singleton "style" "border-color: green"
-  rec n <- input' "text" "" never attrs
+  rec n <- textInput $ def & textInputConfig_attributes .~ attrs
       countCorrectDyn <- combineDyn countCorrect headstartDyn (_textInput_value n)
       inputLengthDyn <- mapDyn length (_textInput_value n)
       countErrorsCurrentDyn <- combineDyn (-) inputLengthDyn countCorrectDyn
