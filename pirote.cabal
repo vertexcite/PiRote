@@ -1,0 +1,38 @@
+Name: pirote
+Version: 0.1
+Synopsis: Single-page web app for memorising digits of Pi
+Description: Aids rote memorisation of the digits of Pi.
+Author: Randall Britten (based on Todo MVC by Ryan Trinkle)
+Maintainer: randall.britten@gmail.com
+Stability: Experimental
+Category: FRP
+Build-type: Simple
+Cabal-version: >=1.8
+
+library
+  hs-source-dirs: src
+  build-depends: 
+    base,
+    reflex,
+    ghcjs-dom == 0.2.*,
+    reflex-dom,
+    containers,
+    file-embed,
+    text,
+    mtl,
+    safe
+  exposed-modules:
+    PiRote.PiRote
+  other-extensions: TemplateHaskell
+  ghc-prof-options: -fprof-auto
+  ghc-options:  -Wall -fwarn-tabs -funbox-strict-fields -O2
+
+executable pirote
+  hs-source-dirs: src-bin
+  main-is: main.hs
+  build-depends:
+    base,
+    pirote
+  other-extensions: TemplateHaskell
+  ghc-prof-options: -fprof-auto
+  ghc-options: -threaded -Wall -fwarn-tabs -funbox-strict-fields -O2

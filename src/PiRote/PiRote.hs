@@ -1,5 +1,5 @@
 {-# LANGUAGE RecursiveDo, ScopedTypeVariables, FlexibleContexts, TypeFamilies, ConstraintKinds, TemplateHaskell #-}
-module Main where
+module PiRote.PiRote where
 
 import Data.FileEmbed
 import Data.Monoid ((<>))
