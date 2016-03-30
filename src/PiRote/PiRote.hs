@@ -8,9 +8,6 @@ main = mainWidget $ el "div" $ do
   t <- textInput def
   let bs = map (ble . show) [0..9]
   bs' <- mapM id bs
---  bs1 :: Event Spider String <- ble "1"
---  bs2 <- ble "2"
---  let bsm = mergeWith (++) [bs1, bs2]
   let bsm = mergeWith (++) bs'
   clickHistory <- foldDyn (++) "" bsm
   dynText clickHistory
