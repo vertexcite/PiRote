@@ -11,7 +11,7 @@ main = mainWidget $ el "div" $ do
   let bs = map (ble . show) digits
   bs' <- mapM id bs
   let bsm = mergeWith (++) bs'
-  clickHistory <- foldDyn (++) "" bsm
+  clickHistory <- foldDyn (flip (++)) "" bsm
   dynText clickHistory
   dynText $ _textInput_value t
 
