@@ -17,7 +17,4 @@ main = mainWidget $ el "div" $ do
 
 
 ble :: MonadWidget Spider m => String -> m (Event Spider String)
-ble label = do
-  b :: Event Spider () <- button label
-  let x :: Event Spider String = fmap (const label) b
-  return x
+ble label = button label >>= (return . fmap (const label) )
