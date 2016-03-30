@@ -15,11 +15,16 @@ import Safe (readMay)
 
 import Data.Maybe (fromMaybe)
 
+
 main =
   mainWidgetWithCss $(embedFile "style.css") $
     elAttr "div" ("class" =: "todomvc-wrapper" <> "visibility" =: "hidden") $ 
       elAttr "section" ("class" =: "todoapp") $ do
         el "h1" $ text "Pi Rote"      
+        bc <- button "click"
+        countClicksDyn <- count bc
+        countClicksTextDyn <- mapDyn show countClicksDyn
+        dynText countClicksTextDyn
         elAttr "div" ("class" =: "view") $ do 
           text "How many digits headstart:"
           headstartInputDyn <- el "div" numberInput
