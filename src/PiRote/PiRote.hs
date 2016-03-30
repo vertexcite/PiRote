@@ -6,8 +6,19 @@ import Reflex.Dom
 main :: IO ()
 main = mainWidget $ el "div" $ do
   t <- textInput def
-  b1 <- button "1"
-  let bs1 = fmap (const "1") b1
-  clickHistory <- foldDyn (++) "" bs1
+  let bs = map (ble . show) [0..9]
+  bs' <- mapM id bs
+--  bs1 :: Event Spider String <- ble "1"
+--  bs2 <- ble "2"
+--  let bsm = mergeWith (++) [bs1, bs2]
+  let bsm = mergeWith (++) bs'
+  clickHistory <- foldDyn (++) "" bsm
   dynText clickHistory
   dynText $ _textInput_value t
+
+
+ble :: MonadWidget Spider m => String -> m (Event Spider String)
+ble label = do
+  b :: Event Spider () <- button label
+  let x :: Event Spider String = fmap (const label) b
+  return x
