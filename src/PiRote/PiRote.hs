@@ -2,11 +2,13 @@
 module PiRote.PiRote where
 
 import Reflex.Dom
+digits :: [Integer]
+digits = [0..9]
 
 main :: IO ()
 main = mainWidget $ el "div" $ do
   t <- textInput def
-  let bs = map (ble . show) [0..9]
+  let bs = map (ble . show) digits
   bs' <- mapM id bs
   let bsm = mergeWith (++) bs'
   clickHistory <- foldDyn (++) "" bsm
