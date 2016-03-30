@@ -13,15 +13,15 @@ packages:
 
 resolver: lts-3.10
 
-compiler: ghcjs-0.2.0.20151001_ghc-7.10.2
+compiler: ghcjs-0.2.0.20151230.3_ghc-7.10.2
 compiler-check: match-exact
 setup-info:
   ghcjs:
     source:
-      ghcjs-0.2.0.20151001_ghc-7.10.2:
-        url: "https://github.com/fizruk/ghcjs/releases/download/v0.2.0.20151001/ghcjs-0.2.0.20151001.tar.gz"
+      ghcjs-0.2.0.20151230.3_ghc-7.10.2:
+        url: "https://github.com/nrolland/ghcjs/releases/download/v.0.2.0.20151230.3/ghcjs-0.2.0.20151230.3.tar.gz"
 
 extra-deps:
   - ref-tf-0.4
   - these-0.6.1.0
-  - ghcjs-dom-0.2.2.0 # improved-base compatible with (2015-10-01 ghcjs)
+  - ghcjs-dom-0.2.3.1 # improved-base compatible with (2015-10-01 ghcjs)
