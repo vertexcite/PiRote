@@ -3,19 +3,31 @@ module PiRote.PiRote where
 
 import Reflex.Dom
 
-digits :: [Integer]
-digits = [0..9]
-
 main :: IO ()
 main = mainWidget $ el "div" $ do
-  clickHistory <- keypad
+  clickHistory :: Dynamic Spider String <- keypad
   dynText clickHistory
+
+keypadRow :: MonadWidget Spider m => [Integer] -> m (Event Spider String)
+keypadRow digits = do
+  let
+    bs :: MonadWidget Spider m => [m (Event Spider String)]
+    bs = map (ble . show) digits
+  bs' :: [(Event Spider String)] <- mapM id bs
+  let
+    bsm :: Event Spider String
+    bsm = mergeWith (++) bs'
+  return bsm
 
 keypad :: MonadWidget Spider m => m (Dynamic Spider String)
 keypad = do
-  let bs = map (ble . show) digits
-  bs' <- mapM id bs
-  let bsm = mergeWith (++) bs'
+  kr1 :: Event Spider String <- keypadRow [7..9]
+  kr2 :: Event Spider String <- keypadRow [4..6]
+  kr3 :: Event Spider String <- keypadRow [1..3]
+  kr4 :: Event Spider String <- keypadRow [0]
+  let
+    bsm :: Event Spider String
+    bsm = mergeWith (++) [kr1, kr2, kr3, kr4]
   foldDyn (flip (++)) "" bsm
 
 ble :: MonadWidget Spider m => String -> m (Event Spider String)
