@@ -25,13 +25,10 @@ main =
           headstartInputDyn <- el "div" numberInput
           headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
 
-          t <- el "div" $ el "ul" $ do
-            el "li" $ text "Enter memorised digits here (but look lower for assessment): "
-            el "li" $ piInput
+          t <- el "div" $ piInput
 
           compareResultDyn <- combineDyn compareForPi headstartDyn t
           elAttr "div" ("class" =: "main") $ el "ul" $ do
-            el "li" $ text "Pi digits (a glimpse of the tail, X's for incorrect digits): "
             el "li" $ dynText compareResultDyn
           inputLengthDyn <- mapDyn length t
           inputLengthTextualDyn <- mapDyn show inputLengthDyn
