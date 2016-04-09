@@ -22,10 +22,10 @@ keypadRow digits = do
 
 keypad :: MonadWidget Spider m => m (Event Spider String)
 keypad = do
-  kr1 :: Event Spider String <- keypadRow [7..9]
-  kr2 :: Event Spider String <- keypadRow [4..6]
-  kr3 :: Event Spider String <- keypadRow [1..3]
-  kr4 :: Event Spider String <- keypadRow [0]
+  kr1 :: Event Spider String <- el "div" $ keypadRow [7..9]
+  kr2 :: Event Spider String <- el "div" $ keypadRow [4..6]
+  kr3 :: Event Spider String <- el "div" $ keypadRow [1..3]
+  kr4 :: Event Spider String <- el "div" $ keypadRow [0]
   let
     bsm :: Event Spider String
     bsm = mergeWith (++) [kr1, kr2, kr3, kr4]
