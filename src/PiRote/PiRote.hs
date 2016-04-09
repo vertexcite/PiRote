@@ -79,10 +79,10 @@ piInput = do
   clickHistory <- keypad
   foldDyn (flip (++)) "" clickHistory
 
-keypadRow :: MonadWidget t m => [Integer] -> m (Event t String)
+keypadRow :: MonadWidget t m => [String] -> m (Event t String)
 keypadRow digits = do
   let
-    bs = map (ble . show) digits
+    bs = map ble digits
   bs' <- mapM id bs
   let
     bsm = mergeWith (++) bs'
@@ -90,10 +90,10 @@ keypadRow digits = do
 
 keypad :: MonadWidget t m => m (Event t String)
 keypad = do
-  kr1 <- el "div" $ keypadRow [7..9]
-  kr2 <- el "div" $ keypadRow [4..6]
-  kr3 <- el "div" $ keypadRow [1..3]
-  kr4 <- el "div" $ keypadRow [0]
+  kr1 <- el "div" $ keypadRow ["7", "8", "9"]
+  kr2 <- el "div" $ keypadRow ["4", "5", "6"]
+  kr3 <- el "div" $ keypadRow ["1", "2", "3"]
+  kr4 <- el "div" $ keypadRow [".", "0"]
   let
     bsm = mergeWith (++) [kr1, kr2, kr3, kr4]
   return bsm
