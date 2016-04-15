@@ -16,7 +16,7 @@ import Safe (readMay)
 import Data.Maybe (fromMaybe)
 
 main =
-  mainWidgetWithCss $(embedFile "style.css") $
+  mainWidget $
     elAttr "div" ("class" =: "todomvc-wrapper" <> "visibility" =: "hidden") $ 
       elAttr "section" ("class" =: "todoapp") $ do
         el "h1" $ text "Pi Rote"      
