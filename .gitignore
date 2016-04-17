@@ -2,3 +2,5 @@ PiRote.jsexe
 PiRote.js_hi
 PiRote.js_o
 .stack-work
+src-bin/main.js*
+src/PiRote/PiRote.js*

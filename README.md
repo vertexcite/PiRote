@@ -14,3 +14,14 @@ To run, open `index.html` in a browser, e.g. on my mac
 ```
 open .stack-work/install/x86_64-osx/lts-3.10/ghcjs-0.2.0.20151001_ghc-7.10.2/bin/pirote.jsexe/index.html
 ```
+
+Alternatively, using https://github.com/reflex-frp/reflex-platform :
+
+Follow instructions to get reflex-platform and enter its shell.
+
+Then:
+```
+cd PiRote/src
+ghcjs ../src-bin/main.hs
+open ../src-bin/main.jsexe/index.html
+```
