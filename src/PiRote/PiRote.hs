@@ -102,7 +102,7 @@ keypad = do
   return bsm
 
 ble :: MonadWidget t m => String -> m (Event t String)
-ble label = button label >>= (return . fmap (const label) )
+ble label = liftM (fmap $ const label) (button label)
 
 data KeypadEvent = Digit String | Delete
 
