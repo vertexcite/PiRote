@@ -8,8 +8,8 @@ import Control.Monad
 import Data.Char
 
 import Reflex
-import Reflex.Dom hiding (getKeyEvent)
-import Reflex.Dom.Contrib.KeyEvent
+import Reflex.Dom
+import Reflex.Dom.Contrib.Widgets.Common
 
 import qualified Data.Map as Map
 import Safe (readMay)
@@ -119,9 +119,9 @@ keypadWithDelete = do
 keypadAndKeyboard :: MonadWidget t m => m (Event t KeypadEvent)
 keypadAndKeyboard = do
   kp <- keypadWithDelete
-  t <- textInput def
+  (_, t) <- htmlTextInput' "" def
   let
-    k = _textInput_keypress t
+    k = _hwidget_keypress t
     k1 = fmap (Digit . show) k
     k2 = mergeWith (\kpe kbe -> kpe) [kp, k1]
 
