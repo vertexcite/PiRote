@@ -1,11 +1,9 @@
-{-# LANGUAGE RecursiveDo, ScopedTypeVariables, FlexibleContexts, TypeFamilies, ConstraintKinds, TemplateHaskell #-}
+{-# LANGUAGE RecursiveDo, ScopedTypeVariables, FlexibleContexts, TypeFamilies, ConstraintKinds #-}
 module PiRote.PiRote where
 
-import Data.FileEmbed
 import Data.Monoid ((<>))
 
 import Control.Monad
-import Data.Char
 
 import Reflex
 import Reflex.Dom
@@ -15,6 +13,7 @@ import Safe (readMay)
 
 import Data.Maybe (fromMaybe)
 
+main :: IO ()
 main =
   mainWidget $
     elAttr "div" ("class" =: "todomvc-wrapper" <> "visibility" =: "hidden") $ 
@@ -25,10 +24,10 @@ main =
           headstartInputDyn <- el "div" numberInput
           headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
 
-          t <- el "div" $ piInput
+          t <- el "div" piInput
 
           compareResultDyn <- combineDyn compareForPi headstartDyn t
-          elAttr "div" ("class" =: "main") $ el "ul" $ do
+          elAttr "div" ("class" =: "main") $ el "ul" $
             el "li" $ dynText compareResultDyn
           inputLengthDyn <- mapDyn length t
           inputLengthTextualDyn <- mapDyn show inputLengthDyn
@@ -57,7 +56,7 @@ main =
             el "li" $ do
               text "Total: "
               dynText countTotalTextualDyn
-          
+
 numberInput :: (MonadWidget t m) => m (Dynamic t (Maybe Int))
 numberInput = do
   let errorState = Map.singleton "style" "border-color: red"
@@ -79,14 +78,14 @@ piInput = do
 
 reducer :: KeypadEvent -> String -> String
 reducer Delete "" = ""
-reducer Delete (x:xs) = xs
+reducer Delete (_:xs) = xs
 reducer (Digit x) xs = x ++ xs
 
 keypadRow :: MonadWidget t m => [String] -> m (Event t String)
 keypadRow digits = do
   let
     bs = map ble digits
-  bs' <- mapM id bs
+  bs' <- sequence bs
   let
     bsm = mergeWith (++) bs'
   return bsm
@@ -112,7 +111,7 @@ keypadWithDelete = do
   let kEvent = fmap Digit k
   del <- ble "del"
   let delEvent = fmap (const Delete) del
-  let kwdEvent = mergeWith (\k d -> Delete) [kEvent, delEvent]
+  let kwdEvent = mergeWith (const . const Delete) [kEvent, delEvent]
   return kwdEvent
 
 piString :: String
@@ -142,6 +141,7 @@ compareForPi headstart input = drop (length full - displayLength) full
 countCorrect :: Int -> String -> Int
 countCorrect headstart input = length $ filter id $ zipWith (==) input (drop headstart piString)
 
+incrementIfNewError :: Int -> (Int, Int) -> (Int, Int)
 incrementIfNewError currentErrorCount (previousErrorCount, previousTotal) =
   if currentErrorCount > previousErrorCount then (currentErrorCount, previousTotal + currentErrorCount - previousErrorCount) 
   else (currentErrorCount, previousTotal)
