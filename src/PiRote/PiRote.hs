@@ -24,11 +24,11 @@ main =
           headstartInputDyn <- el "div" numberInput
           headstartDyn <- mapDyn (fromMaybe 0) headstartInputDyn
 
-          t <- el "div" piInput
+          rec compareResultDyn <- combineDyn compareForPi headstartDyn t
+              elAttr "div" ("class" =: "main") $ el "ul" $
+                el "li" $ dynText compareResultDyn
+              t <- el "div" piInput
 
-          compareResultDyn <- combineDyn compareForPi headstartDyn t
-          elAttr "div" ("class" =: "main") $ el "ul" $
-            el "li" $ dynText compareResultDyn
           inputLengthDyn <- mapDyn length t
           inputLengthTextualDyn <- mapDyn show inputLengthDyn
           countCorrectDyn <- combineDyn countCorrect headstartDyn t
