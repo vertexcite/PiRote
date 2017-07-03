@@ -34,6 +34,13 @@ main =
             el "li" $ text "Pi digits (a glimpse of the tail, X's for incorrect digits): "
             el "li" $ dynText compareResultDyn
           inputLengthDyn <- mapDyn length t
+          countTotalDyn <- combineDyn (+) headstartDyn inputLengthDyn
+          peekAheadInputDyn <- el "li" $ do
+            text "Peek ahead:"
+            el "div" numberInput
+          peekAheadDyn <- mapDyn (fromMaybe 0) peekAheadInputDyn
+          peekAheadResultDyn <- combineDyn peekAhead peekAheadDyn countTotalDyn
+          el "li" $ dynText peekAheadResultDyn
           inputLengthTextualDyn <- mapDyn show inputLengthDyn
           countCorrectDyn <- combineDyn countCorrect headstartDyn t
           countCorrectTextualDyn <- mapDyn show countCorrectDyn
@@ -41,7 +48,6 @@ main =
           countErrorsCurrentTextualDyn <- mapDyn show countErrorsCurrentDyn
           countErrorsCumulativeDyn <- foldDyn incrementIfNewError (0,0) (updated countErrorsCurrentDyn)
           countErrorsCumulativeTextualDyn <- mapDyn (show . snd) countErrorsCumulativeDyn
-          countTotalDyn <- combineDyn (+) headstartDyn inputLengthDyn
           countTotalTextualDyn <- mapDyn show countTotalDyn
           text "Stats:"
           el "div" $ el "ul" $ do
@@ -94,8 +100,8 @@ groupSize, offset :: Int
 groupSize = 5
 offset = 2
 
-groupString :: String -> String
-groupString xs = take offset xs ++ " " ++ groupString' (drop offset xs)
+groupString :: Int -> String -> String
+groupString offset xs = take offset xs ++ " " ++ groupString' (drop offset xs)
 
 groupString' :: String -> String
 groupString' [] = []
@@ -109,7 +115,10 @@ displayLength = 30
 compareForPi :: Int -> String -> String
 compareForPi headstart input = drop (length full - displayLength) full
   where
-    full = groupString $ take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') input (drop headstart piString)
+    full = groupString offset $ take headstart piString ++ zipWith (\x y -> if x == y then x else 'X') input (drop headstart piString)
+
+peekAhead :: Int -> Int -> String
+peekAhead peekCount currentCount = groupString ((offset - currentCount) `mod` groupSize) . take peekCount . drop currentCount $ piString
 
 countCorrect :: Int -> String -> Int
 countCorrect headstart input = length $ filter id $ zipWith (==) input (drop headstart piString)
