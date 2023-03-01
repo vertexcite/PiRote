@@ -3,7 +3,7 @@ An experiment with Haskell, GHCJS and Functional Reactive Programming (FRP)
 
 Based on https://github.com/ryantrinkle/reflex-todomvc
 
-Try it out at http://vertexcite.github.io/PiRote/
+Try it out at https://vertexcite.github.io/PiRote/
 
 Building is simple:
 ```
